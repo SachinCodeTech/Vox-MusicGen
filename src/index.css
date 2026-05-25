@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Syne", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Orbitron", monospace;
+}
+
+:root {
+  --bg-void: #00000a; 
+  --bg-deep: #03030e; 
+  --bg-surface: #070715;
+  --bg-card: rgba(10, 10, 28, 0.9); 
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-hi: rgba(255, 255, 255, 0.08);
+
+  --neon-cyan: #00f5ff; 
+  --neon-violet: #8b5cf6; 
+  --neon-pink: #f472b6;
+  --neon-gold: #fbbf24; 
+  --neon-green: #10ffb0; 
+  --neon-red: #ff4757;
+
+  --glow-cyan: 0 0 24px rgba(0, 245, 255, 0.55), 0 0 60px rgba(0, 245, 255, 0.2);
+  --glow-violet: 0 0 24px rgba(139, 92, 246, 0.55), 0 0 60px rgba(139, 92, 246, 0.2);
+  --glow-green: 0 0 24px rgba(16, 255, 176, 0.55), 0 0 60px rgba(16, 255, 176, 0.2);
+
+  --text-primary: #eef2ff; 
+  --text-secondary: rgba(180, 195, 255, 0.7);
+  --text-dim: rgba(140, 155, 210, 0.45);
+
+  --border-subtle: rgba(0, 245, 255, 0.1); 
+  --border-active: rgba(0, 245, 255, 0.4);
+  --border-violet: rgba(139, 92, 246, 0.4); 
+  --border-pink: rgba(244, 114, 182, 0.4);
+  --border-green: rgba(16, 255, 176, 0.4);
+
+  --font-display: 'Orbitron', monospace; 
+  --font-body: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --r-sm: 8px; 
+  --r-md: 14px; 
+  --r-lg: 20px; 
+  --r-xl: 28px; 
+  --r-2xl: 36px;
+  
+  --nav-h: 64px; 
+  --safe-b: env(safe-area-inset-bottom, 12px);
+}
+
+/* Base custom resets & typography */
+body {
+  background: var(--bg-void);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  overscroll-behavior: none;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 255, 0.2);
+  border-radius: 2px;
+}
+
+/* Custom grid and glowing ambient systems */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+
+.orb {
+  filter: blur(90px);
+  animation: orb-drift 24s ease-in-out infinite alternate;
+}
+@keyframes orb-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -35px) scale(1.06); }
+  100% { transform: translate(45px, 25px) scale(.96); }
+}
+
+.particle {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: ptc-float linear infinite;
+}
+@keyframes ptc-float {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: .8; }
+  90% { opacity: .4; }
+  100% { transform: translateY(-60px) translateX(var(--dx, 20px)); opacity: 0; }
+}
+
+/* Ambient Logo animations */
+@keyframes logo-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0,245,255,.35); }
+  50% { box-shadow: 0 0 28px rgba(0,245,255,.65), 0 0 60px rgba(139,92,246,.25); }
+}
+.animated-logo {
+  animation: logo-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .2; }
+}
+.blink-indicator {
+  animation: blink 1.4s ease-in-out infinite;
+}
+
+@keyframes dr-spin {
+  0% { transform: rotate(0) scale(1); }
+  25% { transform: rotate(90deg) scale(1.04); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.04); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+.spinning-loader {
+  animation: dr-spin 2s linear infinite;
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.sheet-enter {
+  animation: sheet-up 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.screen-animation {
+  animation: screen-in 0.3s cubic-bezier(.25, .46, .45, .94);
+}
+
+/* Custom premium input slider track */
+input[type="range"].vslider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.08);
+  height: 5px;
+  border-radius: 9999px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+input[type="range"].vslider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"].vslider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+/* Glassmorphism scrollbar track for a subtle premium feel */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Clean up input labels and subtle gradient text utilities */
+.text-gradient-purple-cyan {
+  background: linear-gradient(135deg, #00f5ff 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

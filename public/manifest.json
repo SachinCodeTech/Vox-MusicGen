@@ -1,0 +1,34 @@
+{
+  "name": "Vox MusicGen",
+  "short_name": "VoxMusicGen",
+  "description": "AI-powered Music & Cinematic Video Concept Studio",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#00000a",
+  "theme_color": "#00000a",
+  "categories": [
+    "music",
+    "entertainment",
+    "creativity"
+  ],
+  "icons": [
+    {
+      "src": "https://img.icons8.com/nolan/512/music.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Track",
+      "short_name": "Create",
+      "description": "Start creating a new AI track",
+      "url": "/?screen=create"
+    }
+  ]
+}

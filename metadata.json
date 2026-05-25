@@ -1,0 +1,8 @@
+{
+  "name": "Vox MusicGen",
+  "description": "AI-powered Music & Cinematic Video Concept Studio with real-time reactive visuals and AI Lyric Engine.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
