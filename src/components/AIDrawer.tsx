@@ -77,15 +77,15 @@ export default function AIDrawer({ isOpen, onClose, blueprintContext, onAddSugge
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col align-items-center justify-end">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-end">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-[#000000]/70 backdrop-blur-md transition-opacity duration-300"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Slide-Up Drawer */}
-      <div className="relative z-10 w-full max-w-[480px] bg-[#03030e] border-t border-[#00f5ff]/15 rounded-t-[28px] p-5 pb-[calc(18px+env(safe-area-inset-bottom,12px))] max-h-[75vh] flex flex-col sheet-enter shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
+      <div className="relative z-10 w-full max-w-[480px] bg-[#03030e]/85 backdrop-blur-xl border-t border-white/10 rounded-t-[28px] p-5 pb-[calc(18px+env(safe-area-inset-bottom,12px))] max-h-[82vh] flex flex-col sheet-enter shadow-[0_-10px_45px_rgba(0,0,0,0.9)]">
         {/* Pull Handle */}
         <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-4 cursor-pointer" onClick={onClose} />
 

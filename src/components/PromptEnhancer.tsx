@@ -44,15 +44,15 @@ export default function PromptEnhancer({ isOpen, onClose, originalPrompt, onAppl
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col align-items-center justify-end">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-end">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Sheet panel */}
-      <div className="relative z-10 w-full max-w-[480px] bg-[#03030e] border-t border-[#00f5ff]/15 rounded-t-[28px] p-5 pb-[calc(18px+env(safe-area-inset-bottom,12px))] max-h-[75vh] flex flex-col sheet-enter shadow-[0_-10px_40px_rgba(0,0,0,0.8)]">
+      <div className="relative z-10 w-full max-w-[480px] bg-[#03030e]/85 backdrop-blur-xl border-t border-white/10 rounded-t-[28px] p-5 pb-[calc(18px+env(safe-area-inset-bottom,12px))] max-h-[82vh] flex flex-col sheet-enter shadow-[0_-10px_45px_rgba(0,0,0,0.9)]">
         <div className="w-10 h-1 bg-white/10 rounded-full mx-auto mb-4 cursor-pointer" onClick={onClose} />
         
         <h3 className="font-display text-sm font-bold bg-gradient-to-r from-[#00f5ff] to-[#8b5cf6] bg-clip-text text-transparent mb-1">

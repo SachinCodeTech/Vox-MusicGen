@@ -191,3 +191,56 @@ input[type="range"].vslider::-webkit-slider-thumb:hover {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Premium Ultra-Glassmorphism and Haptic classes */
+.glass-premium {
+  background: rgba(10, 10, 26, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-premium-interactive:hover {
+  background: rgba(15, 15, 38, 0.7);
+  border-color: rgba(0, 245, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 245, 255, 0.08);
+}
+
+.glass-premium-active {
+  background: rgba(15, 15, 40, 0.8);
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-premium-cyan {
+  background: rgba(0, 245, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 245, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.glass-premium-violet {
+  background: rgba(139, 92, 246, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.glass-premium-pink {
+  background: rgba(244, 114, 182, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(244, 114, 182, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Optimizations for high-density mobile displays */
+@media (max-width: 640px) {
+  /* Prevent focus zoom triggers on iOS */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
