@@ -18,6 +18,7 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<"home" | "create" | "lyrics" | "share" | "profile" | "about" | "app-info" | "privacy">("home");
   const [pipelineStep, setPipelineStep] = useState<1 | 2 | 3 | 4>(1);
   const [infoSubTab, setInfoSubTab] = useState<"specs" | "about" | "privacy" | "guide">("specs");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = (screen: "home" | "create" | "lyrics" | "share" | "profile" | "about" | "app-info" | "privacy") => {
     if (screen === "about") {
@@ -902,54 +903,162 @@ export default function App() {
         </div>
 
         <div className="topbar-right flex items-center gap-[6px]">
-          {/* AI Dimension mode activate trigger inside header */}
-          <button
-            type="button"
-            onClick={() => {
-              setAiDimensionMode(!aiDimensionMode);
-              showToast(aiDimensionMode ? "🌌 Dimension de-activated" : "🌌 AI DIMENSION ACTIVE - Dynamic Interface Shifted!");
-            }}
-            className={`flex items-center gap-1 p-[4px_10px] rounded-xl border text-[9px] font-display uppercase font-black transition-all cursor-pointer ${
-              aiDimensionMode
-                ? "bg-[#00f5ff]/20 border-[#00f5ff] text-[#00f5ff] shadow-[0_0_12px_rgba(0,245,255,0.45)]"
-                : "bg-white/[0.02] border-white/10 text-dim hover:text-[#eef2ff]"
-            }`}
-            title="🌌 AI DIMENSION MODE - Interface reacts"
-          >
-            🌌 <span className="hidden xs:inline">DIMENSION</span>
-          </button>
-
-          <div 
-            onClick={() => showToast("💫 AI Credits represent standard creation quota.")}
-            className="credits-badge flex items-center gap-1.5 p-[5px_10px] rounded-xl bg-[#fbbf24]/10 border border-[#fbbf24]/30 text-[11px] font-mono font-medium text-[#fbbf24] cursor-pointer"
-          >
-            ✦ <span>{credits}</span>
-          </div>
-
+          {/* Animated Minimal Berger Menu Toggle */}
           <button 
             type="button"
-            onClick={() => navigate("app-info")}
-            className={`tb-btn w-9 h-9 rounded-xl flex items-center justify-center text-xs border transition-all cursor-pointer ${
-              currentScreen === "app-info" || currentScreen === "about" || currentScreen === "privacy"
-                ? "border-[#00f5ff]/40 bg-[#00f5ff]/15 text-[#00f5ff] shadow-[0_0_10px_rgba(0,245,255,0.25)] font-bold" 
-                : "border-white/10 bg-white/[0.02] hover:bg-white/[0.08] text-dim"
-            }`}
-            title="About & Privacy Statement"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="w-9 h-9 rounded-xl flex flex-col items-center justify-center gap-[4.5px] border border-white/10 bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/20 transition-all cursor-pointer active:scale-95 z-50 text-white"
+            aria-label="Menu"
+            title="System Actions Drawer"
           >
-            ℹ️
-          </button>
-
-          <button 
-            type="button"
-            onClick={() => (user ? navigate("profile") : setAuthOpen(true))}
-            className={`tb-btn w-9 h-9 rounded-xl flex items-center justify-center text-[15px] border cursor-pointer border-[#8b5cf6]/40 bg-[#8b5cf6]/15 hover:bg-[#8b5cf6]/25 transition-all text-[#eef2ff] max-h-9 ${
-              user ? "bg-gradient-to-tr from-[#00f5ff]/20 to-[#8b5cf6]/15 border-[#00f5ff]/40" : ""
-            }`}
-          >
-            {user ? user.avatar : "👤"}
+            <span className={`w-4 h-[1.5px] bg-white rounded-full transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[6px] bg-[#00f5ff]" : ""}`} />
+            <span className={`w-4 h-[1.5px] bg-white rounded-full transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`w-4 h-[1.5px] bg-white rounded-full transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[6px] bg-[#00f5ff]" : ""}`} />
           </button>
         </div>
       </header>
+
+      {/* ── BURGER MENU SLIDEDRAWER (Enterprise level) ── */}
+      <div className={`absolute inset-y-0 right-0 z-50 w-[290px] h-full ${
+        menuOpen ? "translate-x-0" : "translate-x-full"
+      } transition-transform duration-300 ease-out bg-[#03030e]/95 backdrop-blur-2xl border-l border-white/10 flex flex-col justify-between p-6 shadow-2xl`}>
+        {/* Drawer Header */}
+        <div className="space-y-6 overflow-y-auto max-h-[calc(100%-48px)] scrollbar-none pr-1">
+          <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <div>
+              <span className="text-[8px] font-mono font-bold tracking-widest text-[#00f5ff] uppercase block mb-1">[ SYSTEMS CTRL PANEL ]</span>
+              <h3 className="font-display font-black text-sm text-white uppercase tracking-wider">VOX COMMANDS</h3>
+            </div>
+            <button 
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="w-7 h-7 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.08] flex items-center justify-center text-dim hover:text-white transition-all cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Account Profile Card */}
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-3 relative overflow-hidden group">
+            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#8b5cf6]/30 to-transparent" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#00f5ff]/20 flex items-center justify-center text-lg shadow-inner shrink-0">
+              {user ? user.avatar : "👤"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-sans font-bold text-xs text-white truncate">{user ? user.name : "Guest Session"}</h4>
+              <span className="text-[9px] font-mono text-[#8b5cf6] block mt-0.5 uppercase tracking-wide">
+                {user ? `${user.plan} Account` : "FREE TRIAL CLIENT"}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                if (user) {
+                  setUser(null);
+                  showToast("🔓 Logged out successfully");
+                } else {
+                  setAuthOpen(true);
+                }
+              }}
+              className="text-[9.5px] font-mono text-dim hover:text-white px-2.5 py-1 bg-white/5 hover:bg-white/10 rounded-lg transition-all cursor-pointer"
+            >
+              {user ? "OUT" : "AUTH"}
+            </button>
+          </div>
+
+          {/* Energy & Credits */}
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 relative overflow-hidden">
+            <div className="absolute inset-y-0 left-0 w-[2px] bg-[#fbbf24]" />
+            <div className="flex items-center justify-between text-[10px] font-mono text-dim">
+              <span className="uppercase tracking-wider">✦ CREATOR QUOTA:</span>
+              <span className="font-bold text-[#fbbf24]">{credits} CREDS</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-mono text-secondary">Est. Generations: {credits}</span>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setCredits(credits + 50);
+                  showToast("⚡ Recharged standard quota by +50 Credits!");
+                }}
+                className="text-[8px] font-mono text-[#fbbf24] hover:text-white bg-[#fbbf24]/10 hover:bg-[#fbbf24]/20 border border-[#fbbf24]/30 px-2 py-0.5 rounded transition-all cursor-pointer"
+              >
+                RECHARGE
+              </button>
+            </div>
+          </div>
+
+          {/* Config Mode Switch - Dimension Toggle inside Menu */}
+          <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[9px] font-mono text-dim block uppercase tracking-wider">AI DIMENSION MODE</span>
+                <span className="text-[10px] text-secondary leading-relaxed mt-0.5 block">Holographic engine mapping</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAiDimensionMode(!aiDimensionMode);
+                  showToast(aiDimensionMode ? "🌌 Dimension de-activated" : "🌌 AI DIMENSION ACTIVE - Dynamic Interface Shifted!");
+                }}
+                className={`w-10 h-5 rounded-full p-0.5 transition-all outline-none border ${
+                  aiDimensionMode 
+                    ? "bg-[#00f5ff]/20 border-[#00f5ff] flex justify-end" 
+                    : "bg-white/5 border-white/10 flex justify-start"
+                }`}
+              >
+                <span className={`w-3.5 h-3.5 rounded-full transition-all ${aiDimensionMode ? "bg-[#00f5ff]" : "bg-dim"}`} />
+              </button>
+            </div>
+            {aiDimensionMode && (
+              <div className="text-[8px] font-mono text-[#00f5ff] tracking-tight leading-normal bg-[#00f5ff]/5 border border-[#00f5ff]/10 p-2 rounded-lg animate-pulse">
+                [ SPEED: {bpm} BPM // SPECTRA DRIFT ACTIVATED ]
+              </div>
+            )}
+          </div>
+
+          {/* Navigation Links inside Drawer */}
+          <div className="space-y-1.5 border-t border-white/5 pt-4">
+            <span className="text-[8px] font-mono text-dim uppercase tracking-widest block mb-2 px-1">[ DEPLOY WORKSPACE ]</span>
+            {[
+              { label: "⚡ Create Workspace", action: () => navigate("create") },
+              { label: "✍️ Lyric Studio Engine", action: () => navigate("lyrics") },
+              { label: "📤 Shared Showcase", action: () => navigate("share") },
+              { label: "👤 Profile Library", action: () => navigate("profile") },
+              { label: "ℹ️ Documentation Specs", action: () => { navigate("app-info"); setInfoSubTab("specs"); } },
+              { label: "🔒 Privacy & Legals", action: () => { navigate("app-info"); setInfoSubTab("privacy"); } }
+            ].map((lnk) => (
+              <button
+                key={lnk.label}
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  lnk.action();
+                }}
+                className="w-full text-left p-2.5 rounded-xl text-xs font-medium text-secondary hover:text-white hover:bg-white/5 transition-all cursor-pointer flex items-center justify-between"
+              >
+                <span>{lnk.label}</span>
+                <span className="text-[10px] text-dim font-mono">→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* System footer */}
+        <div className="border-t border-white/5 pt-4 flex items-center justify-between text-[9px] font-mono text-dim">
+          <span>SYS CONFIG: v3.2.5 [STABLE]</span>
+          <span className="text-[#10ffb0] tracking-wider font-bold animate-pulse">● ONLINE</span>
+        </div>
+      </div>
+
+      {/* ── BACKDROP OVERLAY ── */}
+      {menuOpen && (
+        <div 
+          onClick={() => setMenuOpen(false)}
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
+        />
+      )}
 
       {/* ── MAIN SCROLLABLE CONTENT VIEWPORTS ── */}
       <main id="main" className="flex-1 overflow-y-auto px-0 pb-[calc(64px+env(safe-area-inset-bottom,12px)+16px)]">

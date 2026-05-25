@@ -5,6 +5,30 @@
   --font-sans: "Syne", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   --font-display: "Orbitron", monospace;
+
+  --color-neon-cyan: #00f5ff;
+  --color-neon-violet: #8b5cf6;
+  --color-neon-pink: #f472b6;
+  --color-neon-gold: #fbbf24;
+  --color-neon-green: #10ffb0;
+  --color-neon-red: #ff4757;
+
+  --color-bg-void: #00000a;
+  --color-bg-deep: #03030e;
+  --color-bg-surface: #070715;
+  --color-bg-card: rgba(10, 10, 28, 0.9);
+  --color-bg-glass: rgba(255, 255, 255, 0.04);
+  --color-bg-glass-hi: rgba(255, 255, 255, 0.08);
+
+  --color-text-primary: #eef2ff;
+  --color-text-secondary: rgba(180, 195, 255, 0.7);
+  --color-text-dim: rgba(140, 155, 210, 0.45);
+
+  --color-border-subtle: rgba(0, 245, 255, 0.1);
+  --color-border-active: rgba(0, 245, 255, 0.4);
+  --color-border-violet: rgba(139, 92, 246, 0.4);
+  --color-border-pink: rgba(244, 114, 182, 0.4);
+  --color-border-green: rgba(16, 255, 176, 0.4);
 }
 
 :root {
