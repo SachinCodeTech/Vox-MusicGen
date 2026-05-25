@@ -15,10 +15,10 @@ interface UserProfile {
 
 export default function App() {
   // Navigation & States
-  const [currentScreen, setCurrentScreen] = useState<"home" | "create" | "lyrics" | "share" | "profile">("home");
+  const [currentScreen, setCurrentScreen] = useState<"home" | "create" | "lyrics" | "share" | "profile" | "about" | "app-info" | "privacy">("home");
   const [pipelineStep, setPipelineStep] = useState<1 | 2 | 3 | 4>(1);
 
-  const navigate = (screen: "home" | "create" | "lyrics" | "share" | "profile") => {
+  const navigate = (screen: "home" | "create" | "lyrics" | "share" | "profile" | "about" | "app-info" | "privacy") => {
     setCurrentScreen(screen);
     setIsPlaying(false);
   };
@@ -93,6 +93,38 @@ export default function App() {
   ]);
   const [directorStoryboardOpen, setDirectorStoryboardOpen] = useState(false);
   const [activeUniverse, setActiveUniverse] = useState<string | null>(null);
+
+  // ── START SCREEN LOADER STATES & PROGRESS EFFECT ──
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashProgress, setSplashProgress] = useState(0);
+  const [splashText, setSplashText] = useState("Booting VOX Engine OS...");
+
+  useEffect(() => {
+    if (!showSplash) return;
+    const bootSequences = [
+      { prg: 5, text: "Accessing core neural matrix..." },
+      { prg: 15, text: "Authenticating security sandbox protocols..." },
+      { prg: 32, text: "Aligning deep signal filters with CodeTech servers..." },
+      { prg: 50, text: "Confirming Lead Developer: Sachin Sheth node auth..." },
+      { prg: 68, text: "Synthesizing master quantum EQ dials..." },
+      { prg: 85, text: "Pre-allocating Vox Director visual scene nodes..." },
+      { prg: 96, text: "Checking matrix privacy policy bounds..." },
+      { prg: 100, text: "VOX OS Core status: Online. Complete." }
+    ];
+
+    let currentStep = 0;
+    const timer = setInterval(() => {
+      if (currentStep < bootSequences.length) {
+        setSplashProgress(bootSequences[currentStep].prg);
+        setSplashText(bootSequences[currentStep].text);
+        currentStep++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 380);
+
+    return () => clearInterval(timer);
+  }, [showSplash]);
 
   // Monitor network connection status
   useEffect(() => {
@@ -532,14 +564,97 @@ export default function App() {
       <div className="absolute top-[12%] left-[12%] w-[400px] h-[400px] rounded-full bg-[#00f5ff]/4 blur-[120px] pointer-events-none select-none" />
       <div className="absolute bottom-[16%] right-[12%] w-[420px] h-[420px] rounded-full bg-[#8b5cf6]/4 blur-[130px] pointer-events-none select-none" />
 
-      <div 
-        id="app" 
-        className={`relative z-10 w-full max-w-[480px] min-h-screen md:min-h-[860px] md:max-h-[900px] md:rounded-[36px] md:border md:border-white/10 md:shadow-[0_24px_80px_rgba(0,0,0,0.92)] flex flex-col text-[#eef2ff] transition-all duration-700 overflow-hidden ${
-          aiDimensionMode 
-            ? "bg-[#010115] shadow-[0_0_80px_rgba(0,245,255,0.22)] border-x border-[#00f5ff]/15 md:border-[#00f5ff]/30" 
-            : "bg-[#00000a]"
-        }`}
-      >
+      {showSplash ? (
+        <div 
+          id="splash-loading" 
+          className="relative z-10 w-full max-w-[480px] min-h-screen md:min-h-[860px] md:max-h-[900px] md:rounded-[36px] md:border md:border-white/10 md:shadow-[0_24px_80px_rgba(0,0,0,0.92)] flex flex-col justify-between p-8 bg-[#00000a] text-[#eef2ff] overflow-hidden"
+        >
+          {/* Ambient matrix glowing dusts */}
+          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-[15%] left-[10%] w-[260px] h-[260px] rounded-full bg-gradient-to-tr from-[#00f5ff]/6 to-transparent blur-[70px] animate-pulse" />
+            <div className="absolute bottom-[25%] right-[10%] w-[260px] h-[260px] rounded-full bg-gradient-to-tr from-[#8b5cf6]/6 to-transparent blur-[70px] animate-pulse" />
+            <div className="absolute inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#00f5ff]/15 to-transparent top-1/3" />
+          </div>
+
+          {/* Core Content */}
+          <div className="flex flex-col items-center justify-center flex-grow z-10 space-y-8 mt-[15%]">
+            <div className="logo-assembly relative animate-scaleUp">
+              <div className="absolute inset-0 w-24 h-24 rounded-[28px] bg-gradient-to-tr from-[#00f5ff] via-[#8b5cf6] to-[#f472b6] blur-[22px] opacity-40 animate-pulse" />
+              <div className="relative w-24 h-24 rounded-[28px] bg-gradient-to-br from-[#0c0d21] to-[#04050e] border border-[#00f5ff]/30 flex flex-col items-center justify-center shadow-2xl">
+                {/* Custom glowing SVG vector audio equalizer wave logo */}
+                <svg className="w-12 h-12 text-[#00f5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="25" strokeLinecap="round" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2v20M17 5v14M7 5v14M22 9v6M2 9v6" strokeWidth="2.5" />
+                </svg>
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-gradient-to-tr from-[#00f5ff] to-[#8b5cf6] text-black text-[9px] font-mono font-black border-4 border-[#00000a] flex items-center justify-center shadow-lg animate-pulse">
+                  AI
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center space-y-2">
+              <span className="text-[10px] font-mono text-[#00f5ff] tracking-[0.22em] uppercase block font-bold">
+                ✦ MASTER COGNITIVE OS ✦
+              </span>
+              <h1 className="font-display text-[29px] font-black tracking-widest bg-gradient-to-r from-white via-[#00f5ff] to-[#8b5cf6] bg-clip-text text-transparent uppercase leading-tight select-none">
+                Vox MusicGen
+              </h1>
+              <p className="text-[#a0aec0] text-[10.5px] font-mono max-w-[280px] mx-auto opacity-80 uppercase tracking-widest leading-relaxed">
+                Acoustic Multi-Synthesis OS
+              </p>
+            </div>
+
+            {/* Matrix Loading elements */}
+            <div className="w-full max-w-[280px] space-y-3 pt-4">
+              <div className="h-[2px] w-full bg-white/[0.04] rounded-full overflow-hidden relative">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#00f5ff] via-[#8b5cf6] to-[#f472b6] rounded-full transition-all duration-300 shadow-[0_0_10px_#00f5ff]"
+                  style={{ width: `${splashProgress}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center font-mono text-[8px] text-dim tracking-widest uppercase px-0.5">
+                <span className="animate-pulse truncate max-w-[220px] text-left text-secondary">{splashText}</span>
+                <span className="text-[#00f5ff] font-bold shrink-0">{splashProgress}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Credits & Developer Signoff Footer */}
+          <div className="z-10 text-center space-y-4 pt-4 border-t border-white/[0.04] pb-2">
+            <div className="space-y-1">
+              <p className="text-[7.5px] font-mono text-dim tracking-wide text-center">
+                v2.05 · All sound frequencies secure and sandboxed
+              </p>
+            </div>
+
+            <div className="action-row h-[42px] flex items-center justify-center">
+              {splashProgress >= 100 ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSplash(false);
+                    showToast("🛰 Connected to Vox Realtime Studio Core");
+                  }}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-tr from-[#00f5ff] via-[#8b5cf6] to-[#f472b6] text-black text-xs font-display font-black uppercase tracking-widest scale-100 animate-scaleUp shadow-[0_0_20px_rgba(0,245,255,0.45)] hover:shadow-[0_0_30px_rgba(139,92,246,0.65)] active:scale-95 transition-all cursor-pointer text-center outline-none border-none line-clamp-1"
+                >
+                  ENTER STUDIO SYSTEM →
+                </button>
+              ) : (
+                <div className="text-[8.5px] font-mono tracking-widest text-[#00f5ff]/50 uppercase py-1 select-none font-bold animate-pulse">
+                  [ ESTABLISHING COGNITIVE BLUEPRINT SYNC ]
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div 
+          id="app" 
+          className={`relative z-10 w-full max-w-[480px] min-h-screen md:min-h-[860px] md:max-h-[900px] md:rounded-[36px] md:border md:border-white/10 md:shadow-[0_24px_80px_rgba(0,0,0,0.92)] flex flex-col text-[#eef2ff] transition-all duration-700 overflow-hidden ${
+            aiDimensionMode 
+              ? "bg-[#010115] shadow-[0_0_80px_rgba(0,245,255,0.22)] border-x border-[#00f5ff]/15 md:border-[#00f5ff]/30" 
+              : "bg-[#00000a]"
+          }`}
+        >
       
       {/* ── 🌌 AI DIMENSION ACTIVE GRAPHICS BACKDROP OVERLAYS ── */}
       {aiDimensionMode && (
@@ -577,12 +692,15 @@ export default function App() {
       )}
 
       {/* ── TOP HEADER BAR ── */}
-      <header id="topbar" className="relative sticky top-0 z-50 h-[58px] flex items-center justify-between px-[18px] bg-[#03030e]/90 backdrop-blur-md border-b border-white/[0.04]">
+      <header id="topbar" className="relative sticky top-0 z-50 h-[58px] flex items-center justify-between px-[18px] bg-[#03030e]/95 backdrop-blur-md border-b border-white/[0.04]">
         <div className="logo flex items-center gap-[9px]">
-          <div className="logo-mark animated-logo w-[30px] h-[30px] rounded-lg bg-gradient-to-tr from-[#00f5ff] to-[#8b5cf6] flex items-center justify-center text-sm select-none font-bold">
-            🎵
+          <div className="logo-mark animated-logo w-[32px] h-[32px] rounded-xl bg-gradient-to-br from-[#0c0d21] to-[#04050e] border border-[#00f5ff]/25 flex items-center justify-center shadow-lg relative overflow-hidden shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#00f5ff]/10 to-[#8b5cf6]/10 opacity-30" />
+            <svg className="w-5 h-5 text-[#00f5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2v20M17 5v14M7 5v14M22 9v6M2 9v6" />
+            </svg>
           </div>
-          <div className="logo-name font-display text-[13px] font-bold tracking-[0.18em] bg-gradient-to-r from-[#00f5ff] to-[#8b5cf6] bg-clip-text text-transparent select-none uppercase">
+          <div className="logo-name font-display text-[13px] font-black tracking-[0.16em] bg-gradient-to-r from-[#00f5ff] to-[#8b5cf6] bg-clip-text text-transparent select-none uppercase">
             Vox MusicGen
           </div>
         </div>
@@ -595,7 +713,7 @@ export default function App() {
               setAiDimensionMode(!aiDimensionMode);
               showToast(aiDimensionMode ? "🌌 Dimension de-activated" : "🌌 AI DIMENSION ACTIVE - Dynamic Interface Shifted!");
             }}
-            className={`flex items-center gap-1 p-[4px_10px] rounded-full border text-[9px] font-display uppercase font-black transition-all cursor-pointer ${
+            className={`flex items-center gap-1 p-[4px_10px] rounded-xl border text-[9px] font-display uppercase font-black transition-all cursor-pointer ${
               aiDimensionMode
                 ? "bg-[#00f5ff]/20 border-[#00f5ff] text-[#00f5ff] shadow-[0_0_12px_rgba(0,245,255,0.45)]"
                 : "bg-white/[0.02] border-white/10 text-dim hover:text-[#eef2ff]"
@@ -607,15 +725,28 @@ export default function App() {
 
           <div 
             onClick={() => showToast("💫 AI Credits represent standard creation quota.")}
-            className="credits-badge flex items-center gap-1.5 p-[5px_10px] rounded-full bg-[#fbbf24]/10 border border-[#fbbf24]/30 text-[11px] font-mono font-medium text-[#fbbf24] cursor-pointer"
+            className="credits-badge flex items-center gap-1.5 p-[5px_10px] rounded-xl bg-[#fbbf24]/10 border border-[#fbbf24]/30 text-[11px] font-mono font-medium text-[#fbbf24] cursor-pointer"
           >
             ✦ <span>{credits}</span>
           </div>
 
           <button 
             type="button"
+            onClick={() => navigate("app-info")}
+            className={`tb-btn w-9 h-9 rounded-xl flex items-center justify-center text-xs border transition-all cursor-pointer ${
+              currentScreen === "app-info" || currentScreen === "about" || currentScreen === "privacy"
+                ? "border-[#00f5ff]/40 bg-[#00f5ff]/15 text-[#00f5ff] shadow-[0_0_10px_rgba(0,245,255,0.25)] font-bold" 
+                : "border-white/10 bg-white/[0.02] hover:bg-white/[0.08] text-dim"
+            }`}
+            title="About & Privacy Statement"
+          >
+            ℹ️
+          </button>
+
+          <button 
+            type="button"
             onClick={() => (user ? navigate("profile") : setAuthOpen(true))}
-            className={`tb-btn w-9 h-9 rounded-lg flex items-center justify-center text-[15px] border cursor-pointer border-[#8b5cf6]/40 bg-[#8b5cf6]/15 hover:bg-[#8b5cf6]/25 transition-all text-[#eef2ff] max-h-9 ${
+            className={`tb-btn w-9 h-9 rounded-xl flex items-center justify-center text-[15px] border cursor-pointer border-[#8b5cf6]/40 bg-[#8b5cf6]/15 hover:bg-[#8b5cf6]/25 transition-all text-[#eef2ff] max-h-9 ${
               user ? "bg-gradient-to-tr from-[#00f5ff]/20 to-[#8b5cf6]/15 border-[#00f5ff]/40" : ""
             }`}
           >
@@ -1974,6 +2105,305 @@ export default function App() {
                 </div>
               )}
             </div>
+            {/* Added brand new quick links at the bottom of the profile page */}
+            {/* Added brand new quick links at the bottom of the profile page */}
+            <div className="px-[18px] pb-4 pt-2">
+              <button
+                type="button"
+                onClick={() => navigate("app-info")}
+                className="w-full py-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:border-white/15 text-secondary text-[11px] font-display font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                ℹ SPECS, ABOUT & PRIVACY HUB
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ================== APP INFO SCREEN (v1.0.0) ================== */}
+        {currentScreen === "app-info" && (
+          <div className="screen-animation space-y-3.5 px-[18px] pt-[20px]">
+            <div className="about-hero text-center space-y-1 mb-4 animate-scaleUp">
+              <div className="mx-auto w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00f5ff] to-[#8b5cf6] flex items-center justify-center text-lg select-none font-bold shadow-lg shadow-[#00f5ff]/10">
+                📱
+              </div>
+              <h2 className="font-display text-lg font-black bg-gradient-to-r from-white via-secondary to-[#00f5ff] bg-clip-text text-transparent uppercase tracking-wider">
+                System Diagnostics
+              </h2>
+              <p className="text-[9px] font-mono text-[#00f5ff] tracking-widest uppercase font-bold">
+                VOX MUSICGEN OS v1.0.0
+              </p>
+            </div>
+
+            {/* Shared Subsection Sub-Navigation */}
+            <div className="flex bg-black/[0.6] border border-white/5 p-1 rounded-xl gap-1 mb-2.5 select-none shrink-0">
+              <button
+                type="button"
+                onClick={() => navigate("app-info")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer bg-[#00f5ff]/15 border border-[#00f5ff]/35 text-[#00f5ff] shadow-[0_0_8px_rgba(0,245,255,0.25)]"
+              >
+                Specs
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("about")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                About
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("privacy")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                Privacy
+              </button>
+            </div>
+
+            {/* Core Application Details Block */}
+            <div className="p-4 bg-[#050514]/90 border border-white/[0.04] rounded-[20px] space-y-3.5 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#00f5ff]/25 to-transparent" />
+              
+              <div className="flex justify-between items-center border-b border-white/[0.03] pb-2">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Build Core Name:</span>
+                <span className="text-xs font-bold text-white uppercase tracking-tight">Vox MusicGen Studio</span>
+              </div>
+
+              <div className="flex justify-between items-center border-b border-white/[0.03] pb-2">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Platform Version:</span>
+                <span className="text-xs font-extrabold text-[#00f5ff] font-mono tracking-wider">v1.0.0 [PRO]</span>
+              </div>
+
+              <div className="flex justify-between items-center border-b border-white/[0.03] pb-2">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Active Drivers:</span>
+                <span className="text-[10px] font-mono text-[#fbbf24] font-semibold">WebAudio v2 + Matrix EQ</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Sandbox Node:</span>
+                <span className="text-[9.5px] font-mono text-[#10ffb0] uppercase font-bold">Secure Gateway Mode</span>
+              </div>
+            </div>
+
+            {/* Live CPU Telemetry & Sound Matrix Stats */}
+            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border border-white/[0.03] rounded-[20px] space-y-3 shadow-md">
+              <h3 className="text-[10px] font-display text-[#00f5ff] font-bold tracking-widest uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00f5ff] animate-ping" />
+                Live Telemetry Matrix
+              </h3>
+              
+              <div className="grid grid-cols-2 gap-2.5 pt-1">
+                <div className="bg-black/35 rounded-xl p-2.5 border border-white/[0.02]">
+                  <p className="text-[8px] font-mono text-dim uppercase tracking-wider">Engine Latency</p>
+                  <p className="text-sm font-display font-medium text-[#10ffb0] mt-0.5">1.2ms</p>
+                </div>
+                <div className="bg-black/35 rounded-xl p-2.5 border border-white/[0.02]">
+                  <p className="text-[8px] font-mono text-dim uppercase tracking-wider">Audio Buffer</p>
+                  <p className="text-sm font-display font-medium text-white mt-0.5">1024 smpl</p>
+                </div>
+                <div className="bg-black/35 rounded-xl p-2.5 border border-white/[0.02]">
+                  <p className="text-[8px] font-mono text-dim uppercase tracking-wider">Storage Memory</p>
+                  <p className="text-sm font-display font-medium text-[#fbbf24] mt-0.5">18.4 MB</p>
+                </div>
+                <div className="bg-black/35 rounded-xl p-2.5 border border-white/[0.02]">
+                  <p className="text-[8px] font-mono text-dim uppercase tracking-wider">Channel Threads</p>
+                  <p className="text-sm font-display font-medium text-[#8b5cf6] mt-0.5">6 Isolated</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Inline Action Buttons - Compact Futuristic Designs */}
+            <div className="pt-2 text-center space-y-2.5">
+              <button
+                type="button"
+                onClick={() => navigate("home")}
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#00f5ff]/20 to-[#8b5cf6]/20 border border-[#00f5ff]/35 text-[#00f5ff] hover:text-white hover:bg-gradient-to-r hover:from-[#00f5ff]/30 hover:to-[#8b5cf6]/30 text-xs font-display uppercase tracking-wider transition-all cursor-pointer font-bold leading-none shadow-[0_0_12px_rgba(0,245,255,0.15)]"
+              >
+                ← RETURN TO HOMEPAGE
+              </button>
+              <div className="text-[7.5px] font-mono text-dim tracking-wider uppercase">
+                System License: Registered to CodeTech Studio
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================== ABOUT VOX MUSICGEN SCREEN ================== */}
+        {currentScreen === "about" && (
+          <div className="screen-animation space-y-3.5 px-[18px] pt-[20px]">
+            <div className="about-hero text-center space-y-1 mb-4 animate-scaleUp">
+              <div className="mx-auto w-10 h-10 rounded-xl bg-gradient-to-tr from-[#8b5cf6] to-[#00f5ff] flex items-center justify-center text-lg select-none font-bold shadow-lg shadow-[#8b5cf6]/10">
+                🏢
+              </div>
+              <h2 className="font-display text-lg font-black bg-gradient-to-r from-white via-secondary to-[#8b5cf6] bg-clip-text text-transparent uppercase tracking-wider">
+                Enterprise Info
+              </h2>
+              <p className="text-[9px] font-mono text-[#8b5cf6] tracking-widest uppercase font-bold">
+                BUILD CREDENTIALS · CREATIVE SUITE
+              </p>
+            </div>
+
+            {/* Shared Subsection Sub-Navigation */}
+            <div className="flex bg-black/[0.6] border border-white/5 p-1 rounded-xl gap-1 mb-2.5 select-none shrink-0">
+              <button
+                type="button"
+                onClick={() => navigate("app-info")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                Specs
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("about")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer bg-[#8b5cf6]/15 border border-[#8b5cf6]/35 text-[#8b5cf6] shadow-[0_0_8px_rgba(139,92,246,0.25)]"
+              >
+                About
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("privacy")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                Privacy
+              </button>
+            </div>
+
+            {/* Core Development Leadership Details */}
+            <div className="p-4 bg-[#050514]/90 border border-white/[0.04] rounded-[20px] space-y-3.5 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#8b5cf6]/25 to-transparent" />
+              
+              <div className="flex justify-between items-center border-b border-white/[0.03] pb-2">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Publisher Group:</span>
+                <span className="text-xs font-bold text-[#10ffb0] uppercase tracking-wider font-display">CodeTech</span>
+              </div>
+
+              <div className="flex justify-between items-center border-b border-white/[0.03] pb-2">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Lead Developer:</span>
+                <span className="text-xs font-extrabold text-[#fbbf24] font-display uppercase tracking-widest font-black">Sachin Sheth</span>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-[9.5px] font-mono text-dim tracking-wider uppercase">Tech Architecture:</span>
+                <span className="text-[10px] text-[#eef2ff] font-mono">React 18 + Pure TypeScript</span>
+              </div>
+            </div>
+
+            {/* Vox MusicGen Narrative and Mission Statement */}
+            <div className="p-4.5 bg-[#03030e]/50 border border-[#8b5cf6]/15 rounded-[20px] space-y-2.5 shadow-sm">
+              <h3 className="text-[10.5px] font-display text-[#8b5cf6] font-black tracking-wider uppercase flex items-center gap-1.5">
+                ✦ The Narrative of Vox MusicGen
+              </h3>
+              <p className="text-[10.5px] text-[#b4c3ff]/80 leading-relaxed">
+                <strong>Vox MusicGen</strong> is a next-generation sandbox workspace designed strictly to liberate songwriter ideas and film soundtrack directors. By turning natural, simple emotional prompts into responsive pitch, chord, and wave structures, creators can construct perfect demo mixes.
+              </p>
+              <p className="text-[10px] text-[#b4c3ff]/60 leading-relaxed">
+                Under <strong>Sachin Sheth's</strong> leadership at <strong>CodeTech</strong>, we avoid low-quality pre-rendered stems in favor of active, client-side synth oscillators. This permits offline, high-speed synthesis without backend latency or privacy hazards.
+              </p>
+            </div>
+
+            {/* Compact Back Button */}
+            <div className="pt-2 text-center space-y-2.5">
+              <button
+                type="button"
+                onClick={() => navigate("home")}
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#8b5cf6]/20 to-[#00f5ff]/20 border border-[#8b5cf6]/35 text-[#8b5cf6] hover:text-white hover:bg-gradient-to-r hover:from-[#8b5cf6]/30 hover:to-[#00f5ff]/30 text-xs font-display uppercase tracking-wider transition-all cursor-pointer font-bold leading-none shadow-[0_0_12px_rgba(139,92,246,0.15)]"
+              >
+                ← RETURN TO HOMEPAGE
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ================== PRIVACY POLICY SCREEN ================== */}
+        {currentScreen === "privacy" && (
+          <div className="screen-animation space-y-3.5 px-[18px] pt-[20px]">
+            <div className="about-hero text-center space-y-1 mb-4 animate-scaleUp">
+              <div className="mx-auto w-10 h-10 rounded-xl bg-gradient-to-tr from-[#10ffb0] to-[#00f5ff] flex items-center justify-center text-lg select-none font-bold shadow-lg shadow-[#10ffb0]/10">
+                🛡️
+              </div>
+              <h2 className="font-display text-lg font-black bg-gradient-to-r from-white via-secondary to-[#10ffb0] bg-clip-text text-transparent uppercase tracking-wider">
+                Privacy Policy
+              </h2>
+              <p className="text-[9px] font-mono text-[#10ffb0] tracking-widest uppercase font-bold">
+                CREATOR ISOLATION PROTOCOLS
+              </p>
+            </div>
+
+            {/* Shared Subsection Sub-Navigation */}
+            <div className="flex bg-black/[0.6] border border-white/5 p-1 rounded-xl gap-1 mb-2.5 select-none shrink-0">
+              <button
+                type="button"
+                onClick={() => navigate("app-info")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                Specs
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("about")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer border border-transparent text-dim hover:text-white"
+              >
+                About
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("privacy")}
+                className="flex-1 py-1.5 text-center text-[10px] font-display font-black tracking-wider rounded-lg transition-all uppercase cursor-pointer bg-[#10ffb0]/15 border border-[#10ffb0]/35 text-[#10ffb0] shadow-[0_0_8px_rgba(16,255,176,0.25)]"
+              >
+                Privacy
+              </button>
+            </div>
+
+            {/* Privacy Commitments Narrative Card */}
+            <div className="p-4.5 bg-[#050514]/90 border border-white/[0.04] rounded-[20px] space-y-3.5 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#10ffb0]/25 to-transparent" />
+              
+              <div className="flex items-center gap-2 text-white border-b border-white/[0.03] pb-2">
+                <span className="text-xs">🛡️</span>
+                <h3 className="font-display text-[10px] font-black tracking-widest uppercase text-white">
+                  CODETECH DATA SECURITY STATUTES
+                </h3>
+              </div>
+
+              <div className="space-y-3 pr-1 text-[10px] text-secondary leading-relaxed">
+                <p>
+                  At <strong>CodeTech</strong>, user privacy and property protection represent our core engineering tenets.
+                </p>
+                
+                <div className="space-y-2.5 font-mono text-[9px] text-[#b4c3ff]/90">
+                  <div className="flex gap-2 items-start bg-black/20 p-2 rounded-lg border border-white/[0.02]">
+                    <span className="text-[#10ffb0] font-bold">✔</span>
+                    <p>
+                      <strong>Zero Audio Tracking:</strong> Core user hums and physical microphone input notes are computed locally. Absolutely no recording metadata files are uploaded or cataloged.
+                    </p>
+                  </div>
+                  
+                  <div className="flex gap-2 items-start bg-black/20 p-2 rounded-lg border border-white/[0.02]">
+                    <span className="text-[#10ffb0] font-bold">✔</span>
+                    <p>
+                      <strong>Perfect IP Protection:</strong> Everything you construct or compile remains entirely your property. You maintain 100% royalty-free ownership.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2 items-start bg-black/20 p-2 rounded-lg border border-white/[0.02]">
+                    <span className="text-[#10ffb0] font-bold">✔</span>
+                    <p>
+                      <strong>Offline Isolation Storage:</strong> Lightweight indices are maintained strictly via your browser's persistent key-value local state variables.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Back Button */}
+            <div className="pt-2 text-center space-y-2.5">
+              <button
+                type="button"
+                onClick={() => navigate("home")}
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#10ffb0]/20 to-[#00f5ff]/20 border border-[#10ffb0]/35 text-[#10ffb0] hover:text-white hover:bg-gradient-to-r hover:from-[#10ffb0]/30 hover:to-[#00f5ff]/30 text-xs font-display uppercase tracking-wider transition-all cursor-pointer font-bold leading-none shadow-[0_0_12px_rgba(16,255,176,0.15)]"
+              >
+                ← RETURN TO HOMEPAGE
+              </button>
+            </div>
           </div>
         )}
       </main>
@@ -2100,8 +2530,11 @@ export default function App() {
       {authOpen && (
         <div className="auth-modal-overlay fixed inset-0 z-[100] bg-black/75 backdrop-blur-md flex items-center justify-center p-5">
           <div className="auth-modal w-full max-w-[360px] bg-[#03030e] border border-white/5 rounded-[24px] p-7 text-center shadow-2xl animate-scaleUp">
-            <div className="am-logo w-14 h-14 rounded-xl bg-gradient-to-tr from-[#00f5ff] to-[#8b5cf6] flex items-center justify-center text-2xl font-bold mx-auto mb-4 tracking-[0.2em] shadow-[0_0_15px_rgba(0,245,255,0.45)]">
-              🎵
+            <div className="am-logo w-14 h-14 rounded-xl bg-gradient-to-br from-[#0c0d21] to-[#04050e] border border-[#00f5ff]/25 flex items-center justify-center shadow-lg relative overflow-hidden mx-auto mb-4">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#00f5ff]/15 to-[#8b5cf6]/15 opacity-45" />
+              <svg className="w-7 h-7 text-[#00f5ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2v20M17 5v14M7 5v14M22 9v6M2 9v6" />
+              </svg>
             </div>
             <h3 className="am-title font-display text-sm font-black bg-gradient-to-r from-white to-[#00f5ff] bg-clip-text text-transparent uppercase mb-1">
               Join Vox MusicGen
@@ -2232,6 +2665,7 @@ export default function App() {
       )}
 
     </div>
+    )}
   </div>
 );
 }
