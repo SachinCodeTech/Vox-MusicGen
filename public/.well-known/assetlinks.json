@@ -1,1 +1,8 @@
-
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.codetech.voxmusicgen",
+        "sha256_cert_fingerprints": ["C8:BC:11:3F:DA:3B:90:B0:66:F8:FD:56:70:C0:0C:32:65:19:56:A4:05:45:2F:AB:51:98:8F:B3:FA:5A:A4:0F"]
+      }
+    }]
