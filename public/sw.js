@@ -6,7 +6,14 @@ const ASSETS = [
   '/logo.svg',
   '/pwa-192x192.png',
   '/pwa-512x512.png',
+  '/pwa-maskable-512x512.png',
+  '/pwa-monochrome-192x192.png',
+  '/pwa-monochrome-512x512.png',
   '/apple-touch-icon.png',
+  '/safari-pinned-tab.svg',
+  '/favicon-32x32.png',
+  '/favicon-16x16.png',
+  '/mstile-150x150.png',
   '/screenshots/mobile-preview.png',
   '/screenshots/desktop-preview.png'
 ];
