@@ -4,6 +4,10 @@ import LaneWaveforms from "./components/LaneWaveforms";
 import AIDrawer from "./components/AIDrawer";
 import PromptEnhancer from "./components/PromptEnhancer";
 import ShareCard from "./components/ShareCard";
+import { PWAInstallButton } from "./components/PWAInstallButton";
+import { OfflineIndicator } from "./components/OfflineIndicator";
+import { AudioMasterControl } from "./components/AudioMasterControl";
+import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
 import { TrackBlueprint, Project, LyricSection } from "./types";
 
 interface UserProfile {
@@ -119,7 +123,9 @@ export default function App() {
   const [presetSaveName, setPresetSaveName] = useState("");
 
   // ── HYBRID CREATIVE STUDIO STATES (V3 MASTER OVERHAUL) ──
-  const [studioSubTab, setStudioSubTab] = useState<"mix" | "beats" | "editor" | "vocals">("mix");
+  const [studioSubTab, setStudioSubTab] = useState<"mix" | "beats" | "editor" | "vocals" | "master">("mix");
+  const [masterVolume, setMasterVolume] = useState<number>(100);
+  const [showHotkeysModal, setShowHotkeysModal] = useState<boolean>(false);
   const [loopGrid, setLoopGrid] = useState<Record<string, boolean[]>>({
     kick: [true, false, false, false, true, false, false, false],
     snare: [false, false, true, false, false, false, true, false],
@@ -515,10 +521,11 @@ export default function App() {
       const ctx = getAudioContext();
       if (!ctx) return;
       const now = ctx.currentTime;
+      const masterScale = masterVolume / 100;
 
       // 1. DRUMS CHANNEL (Respects volumes & mute)
       if (!mutedLanes.drums) {
-        const vol = (laneVolumes.drums ?? 75) / 100;
+        const vol = ((laneVolumes.drums ?? 75) / 100) * masterScale;
         if (step % 8 === 0) {
           // Play resonant sub Kick
           const osc = ctx.createOscillator();
@@ -561,7 +568,7 @@ export default function App() {
 
       // 2. MELODY CHANNEL (Respects volumes & mute, plays chord plucks)
       if (!mutedLanes.melody) {
-        const vol = (laneVolumes.melody ?? 80) / 100;
+        const vol = ((laneVolumes.melody ?? 80) / 100) * masterScale;
         const progression = [
           [220, 261.63, 329.63], // Am chord notes
           [174.61, 220, 261.63], // F chord notes
@@ -598,7 +605,7 @@ export default function App() {
 
       // 3. SYNTH CHANNEL (Respects volumes & mute, low-frequency pads)
       if (!mutedLanes.synth && step % 4 === 0) {
-        const vol = (laneVolumes.synth ?? 70) / 100;
+        const vol = ((laneVolumes.synth ?? 70) / 100) * masterScale;
         const chords = [
           [110, 130.81, 164.81], // Am low bass pad
           [87.31, 110, 130.81],  // F low bass pad
@@ -624,7 +631,7 @@ export default function App() {
 
       // 4. VOCAL CHANNEL (Formant synthetic hum simulation)
       if (!mutedLanes.vocal && step % 8 === 2) {
-        const vol = (laneVolumes.vocal ?? 90) / 100;
+        const vol = ((laneVolumes.vocal ?? 90) / 100) * masterScale;
         const pitches = [329.63, 392.00, 440.00, 523.25];
         const freq = pitches[Math.floor(step / 4) % pitches.length];
         
@@ -643,7 +650,7 @@ export default function App() {
 
       // 5. AMBIENT CHANNEL (Ocean waves low filter swells)
       if (!mutedLanes.ambient && step % 12 === 0) {
-        const vol = (laneVolumes.ambient ?? 60) / 100;
+        const vol = ((laneVolumes.ambient ?? 60) / 100) * masterScale;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
@@ -690,7 +697,7 @@ export default function App() {
     return () => {
       if (playTimerRef.current) clearInterval(playTimerRef.current);
     };
-  }, [isPlaying, mutedLanes, laneVolumes]);
+  }, [isPlaying, mutedLanes, laneVolumes, masterVolume, audioReverse]);
 
   // ── METRONOME BACKING CLICK FOR RECORDING ACTIVE ──
   useEffect(() => {
@@ -759,6 +766,56 @@ export default function App() {
     const s = String(Math.floor(sec % 60)).padStart(2, "0");
     return `${m}:${s}`;
   };
+
+  // ── PRODUCER GLOBAL KEYBOARD SHORTCUTS (DAW ACCESSIBILITY) ──
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const tag = activeEl?.tagName?.toLowerCase();
+      if (tag === "input" || tag === "textarea" || (activeEl as HTMLElement)?.isContentEditable) {
+        return;
+      }
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePlayback();
+      } else if (e.key === "t" || e.key === "T") {
+        e.preventDefault();
+        setCurrentScreen("create");
+        setPipelineStep(4);
+        setStudioSubTab("master");
+        showToast("🎛 Opened Master Precision Console");
+      } else if (e.key === "r" || e.key === "R") {
+        e.preventDefault();
+        setIsRecordingVocal((prev) => !prev);
+        showToast("🎤 Toggled Vocal Recording");
+      } else if (e.key === "m" || e.key === "M") {
+        e.preventDefault();
+        setMutedLanes((prev) => ({ ...prev, drums: !prev.drums }));
+        showToast("🥁 Toggled Drums Mute");
+      } else if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
+        setCurrentScreen("create");
+        setPipelineStep(4);
+        setStudioSubTab("mix");
+      } else if (e.key === "c" || e.key === "C") {
+        e.preventDefault();
+        setCurrentScreen("create");
+        setPipelineStep(1);
+      } else if (e.key === "Escape") {
+        setMenuOpen(false);
+        setChatOpen(false);
+        setEnhancerOpen(false);
+        setShowHotkeysModal(false);
+      } else if (e.key === "?") {
+        e.preventDefault();
+        setShowHotkeysModal((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // ── RECOGNITION TIME & DYNAMIC EVENT SIMULATORS ──
   // Recording Hum simulation ticker
@@ -1265,6 +1322,20 @@ export default function App() {
         </div>
 
         <div className="topbar-right flex items-center gap-[6px]">
+          {/* In-App PWA Install Button */}
+          <PWAInstallButton variant="header" onInstalled={() => showToast("Vox MusicGen successfully installed!")} />
+
+          {/* Quick DAW Hotkeys Modal Trigger */}
+          <button
+            type="button"
+            onClick={() => setShowHotkeysModal(true)}
+            className="h-8 px-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.08] text-secondary hover:text-white flex items-center gap-1.5 text-[10px] font-mono transition-all cursor-pointer"
+            title="DAW Hotkeys & Shortcuts (?)"
+          >
+            <span>⌨️</span>
+            <span className="hidden sm:inline">KEYS</span>
+          </button>
+
           {/* Animated Minimal Berger Menu Toggle */}
           <button 
             type="button"
@@ -1407,13 +1478,41 @@ export default function App() {
                 <span className="text-[10px] text-dim font-mono">→</span>
               </button>
             ))}
+
+            {/* PWA Install Button Card in Menu */}
+            <div className="pt-2 border-t border-white/5">
+              <PWAInstallButton variant="full" onInstalled={() => setMenuOpen(false)} />
+            </div>
+
+            {/* Hotkeys helper button in drawer */}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                setShowHotkeysModal(true);
+              }}
+              className="w-full text-left p-2.5 rounded-xl text-xs font-medium text-secondary hover:text-[#00f5ff] hover:bg-white/5 transition-all cursor-pointer flex items-center justify-between"
+            >
+              <span className="flex items-center gap-2">
+                <span>⌨️</span> DAW Hotkeys & Shortcuts
+              </span>
+              <kbd className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-dim">?</kbd>
+            </button>
           </div>
         </div>
 
         {/* System footer */}
-        <div className="border-t border-white/5 pt-4 flex items-center justify-between text-[9px] font-mono text-dim">
-          <span>SYS CONFIG: v3.2.5 [STABLE]</span>
-          <span className="text-[#10ffb0] tracking-wider font-bold animate-pulse">● ONLINE</span>
+        <div className="border-t border-white/5 pt-3.5 space-y-1.5 text-[8.5px] font-mono text-dim">
+          <div className="flex items-center justify-between">
+            <span className="text-[#10ffb0] font-bold">CodeTech App Store</span>
+            <span className="text-[#10ffb0] tracking-wider font-bold animate-pulse">● ONLINE</span>
+          </div>
+          <div className="flex items-center justify-between text-[8px]">
+            <span>Contact:</span>
+            <a href="mailto:codetech.appstore@gmail.com" className="text-secondary hover:text-[#00f5ff] transition-colors select-all">
+              codetech.appstore@gmail.com
+            </a>
+          </div>
         </div>
       </div>
 
@@ -2434,6 +2533,7 @@ export default function App() {
                 <div className="tab-pill-container mx-[18px] p-[3px] bg-white/[0.02] border border-white/5 rounded-xl flex items-center justify-between gap-1 shadow-inner select-none">
                   {[
                     { id: "mix", label: "🎛️ Mixer", glow: "rgba(0,245,255,0.2)" },
+                    { id: "master", label: "⚡ Master Pro", glow: "rgba(16,255,176,0.3)" },
                     { id: "beats", label: "🥁 Beats", glow: "rgba(139,92,246,0.2)" },
                     { id: "editor", label: "✂️ Audio", glow: "rgba(16,255,176,0.2)" },
                     { id: "vocals", label: "🎤 Vocals", glow: "rgba(244,114,182,0.2)" }
@@ -2460,6 +2560,34 @@ export default function App() {
                     </button>
                   ))}
                 </div>
+
+                {/* ── MASTER PRO CONSOLE (TAP TEMPO, SCALE QUANTIZER, VU LIMITER, WAV STEMS) ── */}
+                {studioSubTab === "master" && (
+                  <div className="mx-[18px] animate-fadeIn">
+                    <AudioMasterControl
+                      currentBpm={bpm}
+                      onBpmChange={(newBpm) => {
+                        setBpm(newBpm);
+                        if (blueprint) {
+                          setBlueprint({ ...blueprint, bpm: newBpm });
+                        }
+                      }}
+                      currentKey={blueprint?.key || "A Minor"}
+                      onKeyChange={(newKey) => {
+                        if (blueprint) {
+                          setBlueprint({ ...blueprint, key: newKey });
+                        }
+                      }}
+                      isPlaying={isPlaying}
+                      laneVolumes={laneVolumes}
+                      mutedLanes={mutedLanes}
+                      masterVolume={masterVolume}
+                      onMasterVolumeChange={setMasterVolume}
+                      getAudioContext={getAudioContext}
+                      showToast={showToast}
+                    />
+                  </div>
+                )}
 
                 {studioSubTab === "mix" && (
                   <div className="space-y-3 animate-fadeIn">
@@ -3320,7 +3448,7 @@ export default function App() {
             </div>
             {/* Added brand new quick links at the bottom of the profile page */}
             {/* Added brand new quick links at the bottom of the profile page */}
-            <div className="px-[18px] pb-4 pt-2">
+            <div className="px-[18px] pb-4 pt-2 space-y-2">
               <button
                 type="button"
                 onClick={() => navigate("app-info")}
@@ -3328,6 +3456,12 @@ export default function App() {
               >
                 ℹ SPECS, ABOUT & PRIVACY HUB
               </button>
+              <div className="p-2.5 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-between text-[9px] font-mono text-dim">
+                <span className="text-[#10ffb0] font-bold">CodeTech App Store</span>
+                <a href="mailto:codetech.appstore@gmail.com" className="hover:text-[#00f5ff] transition-colors select-all">
+                  codetech.appstore@gmail.com
+                </a>
+              </div>
             </div>
           </div>
         )}
@@ -3344,7 +3478,7 @@ export default function App() {
               </div>
               <h2 className="font-display text-lg font-black bg-gradient-to-r from-white via-[#eef2ff] to-[#00f5ff] bg-clip-text text-transparent uppercase tracking-wider leading-tight">
                 {infoSubTab === "specs" && "System Diagnostics"}
-                {infoSubTab === "about" && "About Vox Studio"}
+                {infoSubTab === "about" && "About CodeTech App Store"}
                 {infoSubTab === "privacy" && "Privacy policy"}
                 {infoSubTab === "guide" && "App User Guide"}
               </h2>
@@ -3510,14 +3644,25 @@ export default function App() {
                 </div>
 
                 {/* Team / Credits Footer block */}
-                <div className="p-3.5 bg-black/[0.4] border border-white/[0.04] rounded-[14px] flex justify-between items-center text-[9.5px]">
-                  <div className="space-y-0.5">
-                    <span className="text-dim block text-[8px] uppercase tracking-wider">Lead Developer</span>
-                    <strong className="text-[#fbbf24] font-bold font-sans">Sachin Sheth</strong>
+                <div className="p-3.5 bg-black/[0.4] border border-white/[0.04] rounded-[16px] space-y-2.5 text-[9.5px]">
+                  <div className="flex justify-between items-center">
+                    <div className="space-y-0.5">
+                      <span className="text-dim block text-[8px] uppercase tracking-wider">Company</span>
+                      <strong className="text-[#10ffb0] font-bold font-sans text-xs">CodeTech App Store</strong>
+                    </div>
+                    <div className="text-right space-y-0.5">
+                      <span className="text-dim block text-[8px] uppercase tracking-wider">Lead Developer</span>
+                      <strong className="text-[#fbbf24] font-bold font-sans">Sachin Sheth</strong>
+                    </div>
                   </div>
-                  <div className="text-right space-y-0.5">
-                    <span className="text-dim block text-[8px] uppercase tracking-wider">Publisher Group</span>
-                    <strong className="text-[#10ffb0] font-bold font-sans">CodeTech Studio</strong>
+                  <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[9px] font-mono">
+                    <span className="text-dim uppercase tracking-wider">Contact:</span>
+                    <a 
+                      href="mailto:codetech.appstore@gmail.com"
+                      className="text-[#00f5ff] hover:underline font-bold transition-all select-all"
+                    >
+                      codetech.appstore@gmail.com
+                    </a>
                   </div>
                 </div>
               </div>
@@ -3533,13 +3678,13 @@ export default function App() {
                   <div className="flex items-center gap-2 text-white border-b border-white/[0.03] pb-2">
                     <span className="text-xs">🛡️</span>
                     <h3 className="font-display text-[10px] font-black tracking-widest uppercase text-white">
-                      CODETECH STUDIO STATUTES
+                      CODETECH APP STORE STATUTES
                     </h3>
                   </div>
 
                   <div className="space-y-2.5 text-[10px] text-secondary leading-relaxed">
                     <p>
-                      At <strong>CodeTech Studio</strong>, we respect your creativity and privacy. We do not track or capture your output files without explicit consent.
+                      At <strong>CodeTech App Store</strong>, we respect your creativity and privacy. We do not track or capture your output files without explicit consent.
                     </p>
                     <p className="text-[9px] text-[#fbbf24]/90 font-mono">
                       Last Updated: May 25, 2026
@@ -3586,8 +3731,13 @@ export default function App() {
 
                 {/* Contact info card */}
                 <div className="p-3 bg-[#03030e]/40 border border-[#10ffb0]/20 rounded-xl flex justify-between items-center text-[9px]">
-                  <span className="text-dim uppercase font-mono">Privacy Enquiries:</span>
-                  <span className="text-[#10ffb0] font-mono select-all">privacy@codetech.studio</span>
+                  <span className="text-dim uppercase font-mono">Contact / Privacy Enquiries:</span>
+                  <a 
+                    href="mailto:codetech.appstore@gmail.com"
+                    className="text-[#10ffb0] hover:underline font-mono font-bold select-all"
+                  >
+                    codetech.appstore@gmail.com
+                  </a>
                 </div>
               </div>
             )}
@@ -3662,8 +3812,12 @@ export default function App() {
               >
                 ← RETURN TO HOMEPAGE HUB
               </button>
-              <div className="text-[7.5px] font-mono text-dim tracking-[0.12em] uppercase">
-                System License: Registered to CodeTech Studio
+              <div className="text-[7.5px] font-mono text-dim tracking-[0.12em] uppercase flex flex-wrap justify-center items-center gap-1.5">
+                <span>System License: Registered to CodeTech App Store</span>
+                <span>·</span>
+                <a href="mailto:codetech.appstore@gmail.com" className="hover:text-[#00f5ff] transition-colors select-all">
+                  codetech.appstore@gmail.com
+                </a>
               </div>
             </div>
           </div>
@@ -4093,6 +4247,15 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* ── KEYBOARD SHORTCUTS REFERENCE MODAL ── */}
+      <KeyboardShortcutsModal
+        isOpen={showHotkeysModal}
+        onClose={() => setShowHotkeysModal(false)}
+      />
+
+      {/* ── PWA OFFLINE CONNECTIVITY INDICATOR ── */}
+      <OfflineIndicator />
 
     </div>
     )}

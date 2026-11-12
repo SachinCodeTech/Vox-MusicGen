@@ -205,6 +205,10 @@ app.post("/api/chat-assistant", handleAsync(async (req, res) => {
 
 // ── VITE OR STATIC FILE SERVING MIDDLEWARE ──
 async function initServer() {
+  // Always serve public assets (manifest, sw, icons, screenshots) with proper static headers
+  const publicPath = path.join(process.cwd(), "public");
+  app.use(express.static(publicPath));
+
   if (process.env.NODE_ENV !== "production") {
     console.log("Starting server in Development Mode with Vite Middleware...");
     const vite = await createViteServer({

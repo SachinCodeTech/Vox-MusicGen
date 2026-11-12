@@ -1,21 +1,32 @@
 {
-  "name": "Vox MusicGen",
-  "short_name": "Vox MusicGen",
-  "description": "AI-powered Music & Cinematic Video Concept Studio",
-  "start_url": "/",
+  "id": "/?source=pwa",
+  "name": "Vox MusicGen Studio",
+  "short_name": "VoxMusic",
+  "description": "AI-powered Music & Cinematic Video Concept Studio with real-time reactive audio, stems, and multi-track synthesis.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
   "display_override": [
+    "window-controls-overlay",
     "standalone",
-    "minimal-ui"
+    "minimal-ui",
+    "browser"
   ],
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "background_color": "#00000a",
   "theme_color": "#00000a",
+  "lang": "en",
+  "dir": "ltr",
   "categories": [
     "music",
     "entertainment",
-    "creativity"
+    "productivity",
+    "utilities"
   ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "handle_links": "preferred",
   "icons": [
     {
       "src": "/logo.svg",
@@ -24,24 +35,109 @@
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "/pwa-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "https://img.icons8.com/nolan/512/music.png",
+      "src": "/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-preview.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vox MusicGen Mobile AI Studio"
+    },
+    {
+      "src": "/screenshots/desktop-preview.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vox MusicGen Desktop Multitrack DAW"
     }
   ],
   "shortcuts": [
     {
       "name": "Create Track",
       "short_name": "Create",
-      "description": "Start creating a new AI track",
-      "url": "/?screen=create"
+      "description": "Start creating a new AI track blueprint",
+      "url": "/?screen=create",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Audio Studio",
+      "short_name": "Studio",
+      "description": "Open multi-lane audio mixer & beat laboratory",
+      "url": "/?screen=studio",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Lyric Studio",
+      "short_name": "Lyrics",
+      "description": "Compose and rhyme with AI Lyric Engine",
+      "url": "/?screen=lyrics",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
-  ]
+  ],
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "file_handlers": [
+    {
+      "action": "/",
+      "name": "Audio and Project Stems",
+      "accept": {
+        "audio/*": [".mp3", ".wav", ".mid", ".ogg"]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+voxmusic",
+      "url": "/?track=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 480
+  }
 }
