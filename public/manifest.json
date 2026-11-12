@@ -2,6 +2,7 @@
   "id": "/?source=pwa",
   "name": "Vox MusicGen Studio",
   "short_name": "VoxMusic",
+  "version": "1.0.0",
   "description": "AI-powered Music & Cinematic Video Concept Studio with real-time reactive audio, stems, and multi-track synthesis.",
   "start_url": "/?source=pwa",
   "scope": "/",

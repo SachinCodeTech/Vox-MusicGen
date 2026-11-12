@@ -1230,7 +1230,7 @@ export default function App() {
           <div className="z-10 text-center space-y-4 pt-4 border-t border-white/[0.04] pb-2">
             <div className="space-y-1">
               <p className="text-[7.5px] font-mono text-dim tracking-wide text-center">
-                v2.05 · All sound frequencies secure and sandboxed
+                v1.0.0 · All sound frequencies secure and sandboxed
               </p>
             </div>
 
@@ -1298,7 +1298,7 @@ export default function App() {
 
           {/* Dimmed matrix telemetry label in margins */}
           <div className="absolute top-[80px] left-4 font-mono text-[7px] text-[#00f5ff]/30 uppercase tracking-widest leading-none select-none">
-            [SYS CORE SYNC // DIMENSION ENGINE v4.2 // BPM RESONANCE: {bpm}]
+            [SYS CORE SYNC // DIMENSION ENGINE v1.0.0 // BPM RESONANCE: {bpm}]
           </div>
           <div className="absolute top-[80px] right-4 font-mono text-[7px] text-[#8b5cf6]/30 uppercase tracking-widest leading-none select-none">
             [MATRIX DEPTH: MULTIDIMENSIONAL CHROMA SHIFT: ACTIVE]
@@ -1317,7 +1317,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-1.5 font-display text-[14px] font-black tracking-[0.14em] bg-gradient-to-r from-white via-[#00f5ff] to-[#8b5cf6] bg-clip-text text-transparent uppercase">
             <span>Vox MusicGen</span>
-            <span className="text-[7.5px] font-mono px-1.5 py-0.5 rounded-full bg-gradient-to-r from-[#00f5ff]/20 to-[#8b5cf6]/25 border border-[#00f5ff]/40 text-[#00f5ff] font-extrabold tracking-normal">PRO</span>
+            <span className="text-[7.5px] font-mono px-1.5 py-0.5 rounded-full bg-gradient-to-r from-[#00f5ff]/20 to-[#8b5cf6]/25 border border-[#00f5ff]/40 text-[#00f5ff] font-extrabold tracking-normal">v1.0.0</span>
           </div>
         </div>
 
@@ -1505,7 +1505,7 @@ export default function App() {
         <div className="border-t border-white/5 pt-3.5 space-y-1.5 text-[8.5px] font-mono text-dim">
           <div className="flex items-center justify-between">
             <span className="text-[#10ffb0] font-bold">CodeTech App Store</span>
-            <span className="text-[#10ffb0] tracking-wider font-bold animate-pulse">● ONLINE</span>
+            <span className="text-dim font-bold">v1.0.0</span>
           </div>
           <div className="flex items-center justify-between text-[8px]">
             <span>Contact:</span>
@@ -3637,10 +3637,16 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Tech Stack Card */}
-                <div className="p-3 bg-[#03030e]/40 border border-white/[0.03] rounded-xl flex justify-between items-center">
-                  <span className="text-[8.5px] font-mono text-dim uppercase">Tech Architecture:</span>
-                  <span className="text-[9px] font-mono text-[#00f5ff] font-semibold">React 18 + Pure TypeScript + WebAudio v2</span>
+                {/* Tech Stack & Version Card */}
+                <div className="p-3 bg-[#03030e]/40 border border-white/[0.03] rounded-xl space-y-1.5">
+                  <div className="flex justify-between items-center text-[9px] font-mono">
+                    <span className="text-dim uppercase tracking-wider">App Version:</span>
+                    <span className="text-[#10ffb0] font-bold">v1.0.0 (Release Code 1)</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[9px] font-mono pt-1 border-t border-white/[0.03]">
+                    <span className="text-dim uppercase tracking-wider">Tech Architecture:</span>
+                    <span className="text-[#00f5ff] font-semibold">React 18 + Pure TypeScript + WebAudio v2</span>
+                  </div>
                 </div>
 
                 {/* Team / Credits Footer block */}
@@ -3654,6 +3660,10 @@ export default function App() {
                       <span className="text-dim block text-[8px] uppercase tracking-wider">Lead Developer</span>
                       <strong className="text-[#fbbf24] font-bold font-sans">Sachin Sheth</strong>
                     </div>
+                  </div>
+                  <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[9px] font-mono">
+                    <span className="text-dim uppercase tracking-wider">Release Version:</span>
+                    <span className="text-[#00f5ff] font-bold">1.0.0</span>
                   </div>
                   <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[9px] font-mono">
                     <span className="text-dim uppercase tracking-wider">Contact:</span>
